@@ -1,16 +1,49 @@
 pipeline {
+
+  environment {
+    dockerimagename = "chuannt11673/jenkins.angular"
+    dockerImage = ""
+  }
+
   agent any
+
   stages {
-    stage("verify tooling") {
+
+    stage('Checkout Source') {
       steps {
-        sh '''
-          docker info
-          docker version
-          docker compose version
-          curl --version
-          jq --version
-        '''
+        git 'https://github.com/chuannguyen1208/jenkins-kubenetes.git'
       }
     }
+
+    stage('Build image') {
+      steps{
+        script {
+          dockerImage = docker.build dockerimagename
+        }
+      }
+    }
+
+    stage('Pushing Image') {
+      environment {
+               registryCredential = 'dockerhub-credentials'
+           }
+      steps{
+        script {
+          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+            dockerImage.push("latest")
+          }
+        }
+      }
+    }
+
+    stage('Deploying container to Kubernetes') {
+      steps {
+        script {
+          kubernetesDeploy(configs: "deployment.yaml", "service.yaml")
+        }
+      }
+    }
+
   }
+
 }
