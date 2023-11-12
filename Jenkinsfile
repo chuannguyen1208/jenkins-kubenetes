@@ -5,11 +5,7 @@ pipeline {
     dockerImage = ""
   }
 
-  agent {
-    kubernetes {
-      image 'jenkins/agent:latest'
-    }
-  }
+  agent kubernetes
 
   stages {
 
