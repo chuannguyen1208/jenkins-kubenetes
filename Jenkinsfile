@@ -1,47 +1,73 @@
 pipeline {
-
-  environment {
-    dockerimagename = "chuannt11673/jenkins.angular"
-    dockerImage = ""
+  agent {
+    kubernetes {
+      yaml '''
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - name: node
+            image: node:18-alpine
+        '''
+    }
   }
-
-  agent any
-
   stages {
-
-    stage('Checkout Source') {
+    stage('Run') {
       steps {
-        git 'https://github.com/chuannguyen1208/jenkins-kubenetes.git'
+        container('node') {
+          sh '''
+            node -v
+          '''
+        }
       }
     }
-
-    // stage('Build image') {
-    //   steps{
-    //     script {
-    //       dockerImage = docker.build dockerimagename
-    //     }
-    //   }
-    // }
-
-    // stage('Pushing Image') {
-    //   environment {
-    //            registryCredential = 'docker-credentials'
-    //        }
-    //   steps{
-    //     script {
-    //       docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-    //         dockerImage.push("latest")
-    //       }
-    //     }
-    //   }
-    // }
-
-    stage('Deploying container to Kubernetes') {
-      steps {
-        sh 'kubectl version'
-      }
-    }
-
   }
-
 }
+
+// pipeline {
+
+//   environment {
+//     dockerimagename = "chuannt11673/jenkins.angular"
+//     dockerImage = ""
+//   }
+
+//   agent any
+
+//   stages {
+
+//     stage('Checkout Source') {
+//       steps {
+//         git 'https://github.com/chuannguyen1208/jenkins-kubenetes.git'
+//       }
+//     }
+
+//     stage('Build image') {
+//       steps{
+//         script {
+//           dockerImage = docker.build dockerimagename
+//         }
+//       }
+//     }
+
+//     stage('Pushing Image') {
+//       environment {
+//                registryCredential = 'docker-credentials'
+//            }
+//       steps{
+//         script {
+//           docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+//             dockerImage.push("latest")
+//           }
+//         }
+//       }
+//     }
+
+//     stage('Deploying container to Kubernetes') {
+//       steps {
+//         sh 'kubectl version'
+//       }
+//     }
+
+//   }
+
+// }
