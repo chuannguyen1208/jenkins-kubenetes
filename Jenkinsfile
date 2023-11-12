@@ -5,7 +5,11 @@ pipeline {
     dockerImage = ""
   }
 
-  agent any
+  agent {
+    docker {
+      image 'jenkins/agent:latest'
+    }
+  }
 
   stages {
 
@@ -38,9 +42,7 @@ pipeline {
 
     stage('Deploying container to Kubernetes') {
       steps {
-        kubernetes {
-          yamlFile 'deployment.yml'
-        }
+        sh 'kubectl apply -f deployment.yaml'
       }
     }
 
