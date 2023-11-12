@@ -15,30 +15,30 @@ pipeline {
       }
     }
 
-    stage('Build image') {
-      steps{
-        script {
-          dockerImage = docker.build dockerimagename
-        }
-      }
-    }
+    // stage('Build image') {
+    //   steps{
+    //     script {
+    //       dockerImage = docker.build dockerimagename
+    //     }
+    //   }
+    // }
 
-    stage('Pushing Image') {
-      environment {
-               registryCredential = 'docker-credentials'
-           }
-      steps{
-        script {
-          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            dockerImage.push("latest")
-          }
-        }
-      }
-    }
+    // stage('Pushing Image') {
+    //   environment {
+    //            registryCredential = 'docker-credentials'
+    //        }
+    //   steps{
+    //     script {
+    //       docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+    //         dockerImage.push("latest")
+    //       }
+    //     }
+    //   }
+    // }
 
     stage('Deploying container to Kubernetes') {
       steps {
-        sh 'kubectl apply -f deployment.yaml'
+        sh 'kubectl version'
       }
     }
 
