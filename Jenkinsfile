@@ -1,22 +1,22 @@
 pipeline {
-  agent {
-    kubernetes {
-      yaml '''
-        apiVersion: v1
-        kind: Pod
-        spec:
-          containers:
-          - name: jnlp
-            image: 'jenkins/inbound-agent'
-      '''
-    }
+  agent any
+  
+  tools{
+    maven 'maven_3_5_0'
   }
+
   stages {
-    stage('Run maven') {
+    stage('Checkout Source') {
       steps {
-        container('jnlp') {
-          sh 'echo Hello'
-        }
+        git 'https://github.com/chuannguyen1208/jenkins-kubenetes.git'
+      }
+    }
+
+    stage('Deploy to k8s'){
+      steps{
+          script{
+              kubernetesDeploy (configs: 'deployment.yaml')
+          }
       }
     }
   }
