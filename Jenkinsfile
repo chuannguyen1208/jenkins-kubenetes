@@ -9,12 +9,14 @@ pipeline {
     }
 
     stage('Deploy to k8s'){
-      withKubeConfig(
-      [
-          credentialsId: 'jenkins-kind', 
-          serverUrl: 'https://kubernetes.docker.internal:6443',
-      ]) {
-        sh 'kubectl version'
+      steps {
+        withKubeConfig(
+        [
+            credentialsId: 'jenkins-kind', 
+            serverUrl: 'https://kubernetes.docker.internal:6443',
+        ]) {
+          sh 'kubectl version'
+        }
       }
     }
   }
