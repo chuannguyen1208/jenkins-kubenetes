@@ -6,7 +6,7 @@ pipeline {
   }
 
   agent {
-    docker {
+    kubernetes {
       image 'jenkins/agent:latest'
     }
   }
