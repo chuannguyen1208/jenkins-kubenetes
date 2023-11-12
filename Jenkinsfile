@@ -6,27 +6,16 @@ pipeline {
         kind: Pod
         spec:
           containers:
-          - name: maven
-            image: maven:alpine
-            command:
-            - cat
-            tty: true
-          - name: node
-            image: node:16-alpine3.12
-            command:
-            - cat
-            tty: true
-        '''
+          - name: jnlp
+            image: 'jenkins/inbound-agent'
+      '''
     }
   }
   stages {
     stage('Run maven') {
       steps {
-        container('maven') {
-          sh 'mvn -version'
-        }
-        container('node') {
-          sh 'npm version'
+        container('jnlp') {
+          sh 'echo Hello'
         }
       }
     }
