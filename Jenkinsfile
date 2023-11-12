@@ -9,10 +9,12 @@ pipeline {
     }
 
     stage('Deploy to k8s'){
-      steps{
-          script{
-              kubernetesDeploy (configs: 'deployment.yaml')
-          }
+      withKubeConfig(
+      [
+          credentialsId: 'jenkins-kind', 
+          serverUrl: 'https://kubernetes.docker.internal:6443',
+      ]) {
+        sh 'kubectl version'
       }
     }
   }
