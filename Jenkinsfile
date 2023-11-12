@@ -38,9 +38,9 @@ pipeline {
 
     stage('Deploying container to Kubernetes') {
       steps {
-        sh '''
-          kubectl version
-        '''
+        kubernetes {
+          yamlFile 'deployment.yml'
+        }
       }
     }
 
