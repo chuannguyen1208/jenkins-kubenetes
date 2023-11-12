@@ -6,8 +6,13 @@ pipeline {
         kind: Pod
         spec:
           containers:
+          - name: maven
+            image: maven:alpine
+            command:
+            - cat
+            tty: true
           - name: node
-            image: node:18-alpine
+            image: node:16-alpine3.12
             command:
             - cat
             tty: true
@@ -15,62 +20,15 @@ pipeline {
     }
   }
   stages {
-    stage('Run') {
+    stage('Run maven') {
       steps {
+        container('maven') {
+          sh 'mvn -version'
+        }
         container('node') {
-          sh '''
-            node -v
-          '''
+          sh 'npm version'
         }
       }
     }
   }
 }
-
-// pipeline {
-
-//   environment {
-//     dockerimagename = "chuannt11673/jenkins.angular"
-//     dockerImage = ""
-//   }
-
-//   agent any
-
-//   stages {
-
-//     stage('Checkout Source') {
-//       steps {
-//         git 'https://github.com/chuannguyen1208/jenkins-kubenetes.git'
-//       }
-//     }
-
-//     stage('Build image') {
-//       steps{
-//         script {
-//           dockerImage = docker.build dockerimagename
-//         }
-//       }
-//     }
-
-//     stage('Pushing Image') {
-//       environment {
-//                registryCredential = 'docker-credentials'
-//            }
-//       steps{
-//         script {
-//           docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-//             dockerImage.push("latest")
-//           }
-//         }
-//       }
-//     }
-
-//     stage('Deploying container to Kubernetes') {
-//       steps {
-//         sh 'kubectl version'
-//       }
-//     }
-
-//   }
-
-// }
