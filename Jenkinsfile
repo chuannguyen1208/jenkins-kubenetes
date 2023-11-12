@@ -8,6 +8,9 @@ pipeline {
           containers:
           - name: node
             image: node:18-alpine
+            command:
+            - cat
+            tty: true
         '''
     }
   }
